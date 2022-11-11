@@ -129,6 +129,5 @@ dmypy.json
 .pyre/
 
 .gitignore
-/shopApp/shopApp/settings.py
 .idea
 /shopApp/.dockerignore
