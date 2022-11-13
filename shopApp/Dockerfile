@@ -1,6 +1,6 @@
 FROM python:3.10.8-slim
 
-ENV PYTHONBUFFERED=1
+ENV PYTHONUNBUFFERED=1
 COPY . /app
 WORKDIR /app
 
@@ -10,4 +10,5 @@ RUN /opt/venv/bin/pip install pip --upgrade &&  \
     /opt/venv/bin/pip install -r requirements.txt && \
     chmod +x entrypoint.sh
 
+EXPOSE 8000
 CMD ["/app/entrypoint.sh"]
