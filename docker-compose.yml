@@ -42,6 +42,6 @@ services:
 
 #
 volumes:
-#  shopApp/:
+#  shopApp:
   postgres_data:
 #  redis_data:
