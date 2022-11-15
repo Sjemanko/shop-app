@@ -1,0 +1,50 @@
+<nav class="navbar navbar-expand-md navbar-dark bg-dark">
+  <div class="container-fluid">
+    <a class="navbar-brand" href="{% url 'home' %}">Shop_name</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainMenu"
+            aria-controls="mainMenu"
+            aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse mx-2" id="mainMenu">
+      <div class="container-fluid">
+        <ul class="navbar-nav mx-auto justify-content-center">
+          <li class="nav-item px-3">
+            <a class="nav-link active text-right" href="{% url 'home' %}">Home</a>
+          </li>
+          <li class="nav-item dropdown px-3">
+            <a class="nav-link text-right dropdown-toggle" id="menDropdownMenuLink"
+               role="button" data-bs-toggle="dropdown" aria-expanded="false">
+              Man
+            </a>
+            <ul class="dropdown-menu" aria-labelledby="menDropdownMenuLink">
+              <li><a class="dropdown-item" href="{% url 'gender_category' gender='man' category='hoodies' %}">Bluzy</a></li>
+              <li><a class="dropdown-item" href="{% url 'gender_category' gender='man' category='tshirts' %}">Koszulki</a></li>
+              <li><a class="dropdown-item" href="{% url 'gender_category' gender='man' category='jackets' %}">Kurtki</a></li>
+            </ul>
+          </li>
+          <li class="nav-item dropdown px-3">
+            <a class="nav-link text-right dropdown-toggle" id="womenDropdownMenuLink" href="#"
+               role="button" data-bs-toggle="dropdown" aria-expanded="false">
+              Woman
+            </a>
+            <ul class="dropdown-menu" aria-labelledby="womenDropdownMenuLink">
+              <li><a class="dropdown-item" href="{% url 'gender_category' gender='woman' category='hoodies' %}">Bluzy</a></li>
+              <li><a class="dropdown-item" href="{% url 'gender_category' gender='woman' category='tshirts' %}">Koszulki</a></li>
+              <li><a class="dropdown-item" href="{% url 'gender_category' gender='woman' category='jackets' %}">Kurtki</a></li>
+            </ul>
+          </li>
+          <li class="nav-item px-3">
+            <a class="nav-link text-right" href="{% url 'home' %}">Accesories</a>
+          </li>
+
+        </ul>
+      </div>
+      <div class="collapse navbar-collapse justify-content-end">
+        <ul class="nav navbar-nav mx-5">
+          <li><a class="nav-link nav-item text-right " href="#">Login</a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</nav>
