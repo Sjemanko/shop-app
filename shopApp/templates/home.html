@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block style %}
+    <link rel="stylesheet" href="{% static 'bootstrap/css/bootstrap.min.css' %}">
+    <link rel="stylesheet" href="{% static 'css/app.css' %}">
+{% endblock %}
+
+{% block title %}
+    siema
+{% endblock %}
+
+{% block navbar%}
+{% include 'includes/navbar.html' %}
+{% endblock %}
+
+{% block content %}
+{% endblock %}
+
+{% block script %}
+<script type="text/javascript" src="{% static 'bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+{% endblock %}
