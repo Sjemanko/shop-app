@@ -27,9 +27,10 @@
         {% csrf_token %}
         <div class="form-group">
           <label for="category">Kategoria</label>
-          <select class="form-control" id="category">
+          <select class="form-control" id="category" name="cloth_category">
+            <option value="none" selected disabled hidden>Select a category:</option>
             {% for category in product_categories %}
-            <option>{{ category }}</option>
+            <option value="{{ category }}">{{ category }}</option>
             {% endfor %}
           </select>
         </div>
@@ -70,6 +71,12 @@
             <div class="card-body">
               <h5 class="card-title">{{ item.name }}</h5>
               <p class="card-text">{{ item.product_description }}</p>
+              {% if item.product_size %}
+              <p class="card-text">Dostępne rozmiary:  {{ item.product_size|cut:"[]"|cut:"["|cut:"]"|cut:"'" }}</p> 
+              {% else %}
+              <p class="card-text">Brak dostępnych rozmiarów! :(</p> 
+              {% endif %}
+              <p class="card-text"><b>{{ item.price }} zł</b></p>
               <p class="card-text"><small class="text-muted">Last update - {{ item.updated_at }}</small></p>
               <div class="d-grid gap-2 d-md-flex justify-content-md-end">
                 <a href="#" class="btn btn-primary">Dodaj do koszyka</a>

@@ -15,8 +15,14 @@ def show_all_products(request):
         if 'search_button' in request.POST:
             filtered_products = filter_products_by_name(request, request.POST['name'])
             products = filtered_products
+        elif 'cloth_category' in request.POST and 'filter_button' in request.POST and 'radio' in request.POST:
+            filtered_products = filter_products_by_category_and_gender(request, request.POST['cloth_category'], request.POST['radio'])
+            products = filtered_products
         elif 'filter_button' in request.POST and 'radio' in request.POST:
             filtered_products = filter_products_by_gender(request, request.POST['radio'])
+            products = filtered_products
+        elif 'cloth_category' in request.POST:
+            filtered_products = filter_products_by_category(request, request.POST['cloth_category'])
             products = filtered_products
     return render(request, 'ListItems/products.html', {'item_list': products, "product_categories": products_categories })
 
@@ -27,4 +33,12 @@ def filter_products_by_name(request, product_name):
 
 def filter_products_by_gender(request, gender):
     filtered_products = Product.objects.filter(gender=gender)
+    return filtered_products
+
+def filter_products_by_category(request, category):
+    filtered_products = Product.objects.filter(cloth_category=category)
+    return filtered_products
+
+def filter_products_by_category_and_gender(request, category, gender):
+    filtered_products = Product.objects.filter(cloth_category=category, gender=gender)
     return filtered_products

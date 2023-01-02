@@ -1,8 +1,19 @@
 from django.db import models
 from django.core.exceptions import ValidationError
 from django.contrib.auth.models import User
+from django import forms
+from django.contrib.postgres.fields import ArrayField
 
 # Create your models here.
+class ModifiedArrayField(ArrayField):
+    def formfield(self, **kwargs):
+        defaults = {
+            "form_class": forms.MultipleChoiceField,
+            "choices": self.base_field.choices,
+            **kwargs
+        }
+        return super(ArrayField, self).formfield(**defaults)
+
 
 class Product(models.Model):
     
@@ -36,10 +47,14 @@ class Product(models.Model):
         choices=ClothCategory.choices,
         default=ClothCategory.TSHIRTS
     )
-    product_size = models.CharField(
-        max_length=3,
-        choices=ProductSize.choices,
-        default=""
+    product_size = ModifiedArrayField(models.CharField(
+            max_length=50,
+            choices=ProductSize.choices,
+            blank=True,
+            null=True
+        ),
+        blank=True,
+        null=True
     )
     product_description = models.CharField(
         max_length=255,

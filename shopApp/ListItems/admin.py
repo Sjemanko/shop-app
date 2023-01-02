@@ -1,9 +1,10 @@
 from django.contrib import admin
 from .models import Product, Recommendation
+from django.contrib.admin import widgets
+from django import forms
 
 
 # Register your models here.
- 
 class RecommendationAdmin(admin.ModelAdmin):
   	list_display = ['author', 'content', 'product_id']
 
@@ -17,6 +18,5 @@ class ProductAdmin(admin.ModelAdmin):
 	inlines = [RecommendationInLine]
 	extra = 0
 
-
-admin.site.register(Product, ProductAdmin)
 admin.site.register(Recommendation, RecommendationAdmin)
+admin.site.register(Product, ProductAdmin)

@@ -12,37 +12,14 @@
           <li class="nav-item px-3">
             <a class="nav-link active text-right" href="{% url 'home' %}">Home</a>
           </li>
-          <li class="nav-item dropdown px-3">
-            <a class="nav-link text-right dropdown-toggle" id="menDropdownMenuLink"
-               role="button" data-bs-toggle="dropdown" aria-expanded="false">
-              Man
-            </a>
-            <ul class="dropdown-menu" aria-labelledby="menDropdownMenuLink">
-              <li><a class="dropdown-item" href="{% url 'gender_category' gender='man' category='hoodies' %}">Bluzy</a></li>
-              <li><a class="dropdown-item" href="{% url 'gender_category' gender='man' category='tshirts' %}">Koszulki</a></li>
-              <li><a class="dropdown-item" href="{% url 'gender_category' gender='man' category='jackets' %}">Kurtki</a></li>
-            </ul>
-          </li>
-          <li class="nav-item dropdown px-3">
-            <a class="nav-link text-right dropdown-toggle" id="womenDropdownMenuLink" href="#"
-               role="button" data-bs-toggle="dropdown" aria-expanded="false">
-              Woman
-            </a>
-            <ul class="dropdown-menu" aria-labelledby="womenDropdownMenuLink">
-              <li><a class="dropdown-item" href="{% url 'gender_category' gender='woman' category='hoodies' %}">Bluzy</a></li>
-              <li><a class="dropdown-item" href="{% url 'gender_category' gender='woman' category='tshirts' %}">Koszulki</a></li>
-              <li><a class="dropdown-item" href="{% url 'gender_category' gender='woman' category='jackets' %}">Kurtki</a></li>
-            </ul>
-          </li>
           <li class="nav-item px-3">
             <a class="nav-link text-right" href="{% url 'home' %}">Accesories</a>
           </li>
-
         </ul>
       </div>
-      <div class="collapse navbar-collapse justify-content-end">
-        <ul class="nav navbar-nav mx-5">
-          <li><a class="nav-link nav-item text-right " href="">Login</a></li>
+      <div class="justify-content-end">
+        <ul class="navbar-nav mx-5">
+          <li class="nav-item px-3"><a class="nav-link text-right nav-link nav-item text-right " href="">Login</a></li>
         </ul>
       </div>
     </div>
