@@ -2,7 +2,6 @@ from django.shortcuts import render
 from .models import Product
 from django.http import response
 from django.shortcuts import redirect
-
 # Create your views here.
 
 def product_page(request, gender, category):
@@ -42,3 +41,8 @@ def filter_products_by_category(request, category):
 def filter_products_by_category_and_gender(request, category, gender):
     filtered_products = Product.objects.filter(cloth_category=category, gender=gender)
     return filtered_products
+
+
+def product_details_page(request, slug):
+    product = Product.objects.get(name=slug.replace("-", " "))
+    return render(request, 'ListItems/product_details.html', {"product_details": product})

@@ -31,9 +31,9 @@ class Product(models.Model):
         MEDIUM = "M",
         LARGE = "L",
         
-        
     name = models.CharField(
-        max_length=100
+        max_length=100,
+        unique=True
     )
     # discount_id = models.ForeignKey()
     # opinions = models.ForeignKey()
