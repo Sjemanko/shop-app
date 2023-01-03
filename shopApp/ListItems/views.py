@@ -44,5 +44,5 @@ def filter_products_by_category_and_gender(request, category, gender):
 
 
 def product_details_page(request, slug):
-    product = Product.objects.get(name=slug.replace("-", " "))
+    product = Product.objects.get(slug=slug)
     return render(request, 'ListItems/product_details.html', {"product_details": product})
