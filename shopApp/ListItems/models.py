@@ -3,6 +3,7 @@ from django.core.exceptions import ValidationError
 from django.contrib.auth.models import User
 from django import forms
 from django.contrib.postgres.fields import ArrayField
+from django.utils.text import slugify
 
 # Create your models here.
 class ModifiedArrayField(ArrayField):
@@ -31,9 +32,9 @@ class Product(models.Model):
         MEDIUM = "M",
         LARGE = "L",
         
-        
     name = models.CharField(
-        max_length=100
+        max_length=100,
+        unique=True
     )
     # discount_id = models.ForeignKey()
     # opinions = models.ForeignKey()
@@ -50,11 +51,8 @@ class Product(models.Model):
     product_size = ModifiedArrayField(models.CharField(
             max_length=50,
             choices=ProductSize.choices,
-            blank=True,
-            null=True
+            default=ProductSize.SMALL
         ),
-        blank=True,
-        null=True
     )
     product_description = models.CharField(
         max_length=255,
@@ -69,7 +67,7 @@ class Product(models.Model):
         max_digits=10
     )
     image = models.ImageField(null=True, blank=True, upload_to="images/")
-    
+    slug = models.SlugField(blank=True, null=True)
     created_at = models.DateTimeField(
         auto_now_add=True,
         null=True
@@ -82,6 +80,11 @@ class Product(models.Model):
         if value <= 0:
             return ValidationError("Price cannot be an negative number. Change price of product.")
         return value
+
+    def save(self, *args, **kwargs):
+        if self.slug is None:
+            self.slug = slugify(self.name)
+        super().save(*args, **kwargs)
 
     def __str__(self):
         return f'{self.id} {self.name}'

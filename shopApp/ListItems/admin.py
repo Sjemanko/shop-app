@@ -14,7 +14,7 @@ class RecommendationInLine(admin.StackedInline):
 	extra = 0
 
 class ProductAdmin(admin.ModelAdmin):
-	list_display = ['id', 'name', 'gender', 'cloth_category', 'product_size', 'product_description', 'product_quantity', 'price', 'image']
+	list_display = ['id', 'name', 'slug', 'gender', 'cloth_category', 'product_size', 'product_description', 'product_quantity', 'price', 'image']
 	inlines = [RecommendationInLine]
 	extra = 0
 
