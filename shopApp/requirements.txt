@@ -9,3 +9,4 @@ boto3
 whitenoise
 django-widget-tweaks
 Pillow
+django-crispy-forms

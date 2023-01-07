@@ -40,7 +40,8 @@ INSTALLED_APPS = [
     'whitenoise.runserver_nostatic',
     'home',
     'ListItems',
-    'login'
+    'login',
+    'crispy_forms',
 ]
 
 MIDDLEWARE = [

@@ -91,9 +91,26 @@ class Product(models.Model):
 		
 
 class Recommendation(models.Model):
+    
+    class RatingChoices(models.IntegerChoices):
+        ONE = 1,
+        TWO = 2,
+        THREE = 3,
+        FOUR = 4,
+        FIVE = 5
+        
+    title = models.CharField(max_length=100)
     content = models.TextField()
     product_id = models.ForeignKey(Product, on_delete=models.CASCADE)
     author = models.ForeignKey(User, on_delete=models.CASCADE)
+    rating = models.PositiveSmallIntegerField(
+        choices=RatingChoices.choices,
+        default=RatingChoices.FIVE
+    )
+    created_at = models.DateTimeField(
+        auto_now_add=True,
+        null=True
+    )
     
     def __str__(self):
         return f'{self.id} {self.author} {self.product_id}'

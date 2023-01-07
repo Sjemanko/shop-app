@@ -19,7 +19,21 @@
       </div>
       <div class="justify-content-end">
         <ul class="navbar-nav mx-5">
-          <li class="nav-item px-3"><a class="nav-link text-right nav-link nav-item text-right " href="/account/login">Login</a></li>
+          {% if user.is_authenticated %}
+            <li class="nav-item">
+              <a class="nav-link" href="/account/logout">Logout</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#">Welcome, {{user.username}}</a>
+            </li>
+          {% else %}
+            <li class="nav-item">
+              <a class="nav-link" href="/account/login">Login</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/account/register">Register</a>
+            </li>
+          {% endif %}
         </ul>
       </div>
     </div>
