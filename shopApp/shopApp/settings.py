@@ -40,6 +40,8 @@ INSTALLED_APPS = [
     'whitenoise.runserver_nostatic',
     'home',
     'ListItems',
+    'login',
+    'crispy_forms',
 ]
 
 MIDDLEWARE = [
@@ -154,7 +156,11 @@ STATIC_URL = '/static/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'
 
-STATICFILES_DIRS = ('static', BASE_DIR / 'home', BASE_DIR / 'ListItems')
+STATICFILES_DIRS = (
+    'static', 
+    BASE_DIR / 'home', 
+    BASE_DIR / 'ListItems',
+    BASE_DIR / 'login')
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
