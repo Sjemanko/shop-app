@@ -66,7 +66,7 @@ def add_opinion(request, slug):
         if form.is_valid(): 
             recommendation.save()
             messages.success(request, f"Your opinion has been added.")
-            return HttpResponseRedirect(f'/products/{slug}')
+            return HttpResponseRedirect(f'/products/{slug}/')
         else:
             messages.error(request, f"Form is not valid. Check form and correct fields.")
     else:
@@ -81,5 +81,3 @@ def count_average_opinion_value(request, recommendations):
         return round(total_score / recommendations.count(), 1)
     else:
         return 0
-    
-    

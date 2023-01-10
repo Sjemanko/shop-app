@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'ListItems',
     'login',
     'crispy_forms',
+    'ShoppingCart',
 ]
 
 MIDDLEWARE = [
@@ -160,7 +161,8 @@ STATICFILES_DIRS = (
     'static', 
     BASE_DIR / 'home', 
     BASE_DIR / 'ListItems',
-    BASE_DIR / 'login')
+    BASE_DIR / 'login',
+    BASE_DIR / 'ShoppingCart',)
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
