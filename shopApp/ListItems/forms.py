@@ -14,10 +14,3 @@ class RecommendationForm(ModelForm):
     class Meta:
         model = Recommendation
         fields = ('title', 'content', 'rating')
-    
-    
-class UserDetailsForm(ModelForm):
-    
-    class Meta:
-        model = User
-        fields = '__all__'
