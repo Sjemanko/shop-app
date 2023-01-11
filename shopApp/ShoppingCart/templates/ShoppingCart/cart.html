@@ -15,73 +15,78 @@
 {% endblock %}
 
 {% block messages %}
-  {% if messages %}
-    {% for message in messages %}
-      <div class="alert alert-warning alert-alert-dismissable fade show" role="alert">
-        {{ message }}
-        <button type="button" class="btn-close float-end" data-bs-dismiss="alert" aria-label="Close"></button>
-      </div>
-    {% endfor %}
-  {% endif %}
+{% if messages %}
+{% for message in messages %}
+{% if 'success' in message.tags %}
+<div class="alert alert-success alert-alert-dismissable fade show" role="alert">
+  {{ message }}
+  <button type="button" class="btn-close float-end" data-bs-dismiss="alert" aria-label="Close"></button>
+</div>
+{% else %}
+<div class="alert alert-warning alert-alert-dismissable fade show" role="alert">
+  {{ message }}
+  <button type="button" class="btn-close float-end" data-bs-dismiss="alert" aria-label="Close"></button>
+</div>
+{% endif %}
+{% endfor %}
+{% endif %}
 {% endblock %}
 
 {% block content %}
 <body>
     <div class="container">
-        <h1 class="text-center my-5">Shopping Cart</h1>
         <div class="row">
-            <div class="col-md-8">
-                <table class="table table-bordered">
-                    <thead>
-                        <tr>
-                            <th>Product</th>
-                            <th>Quantity</th>
-                            <th>Price</th>
-                            <th>Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for item in items_in_cart %}
-                        <tr>
-                            <td>{{ item.product.name }}</td>
-                            <td>
-                                <input type="number" min='0' class="form-control" value="{{ item.quantity }}">
-                            </td>
-                            <td>{{ item.product.price }} PLN</td>
-                            <td>
-                                <button class="btn btn-danger" onclick="removeProduct(1)">Remove</button>
-                            </td>
-                        </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
-            </div>
-            <div class="col-md-4">
-                <h3>Order Summary</h3>
-                <table class="table">
-                    <tbody>
-                        <tr>
-                            <td>Subtotal</td>
-                            <td>$60.00</td>
-                        </tr>
-                        <tr>
-                            <td>Shipping</td>
-                            <td>$5.00</td>
-                        </tr>
-                        <tr>
-                            <td>Tax</td>
-                            <td>$4.20</td>
-                        </tr>
-                        <tr>
-                            <td>Total</td>
-                            <td>$69.20</td>
-                        </tr>
-                    </tbody>
-                </table>
-                <button class="btn btn-primary btn-block">Submit Order</button>
-            </div>
+          <div class="col-12">
+            <h1>Shopping Cart</h1>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-12">
+            <table class="table">
+              <thead>
+                <tr>
+                  <th>Product</th>
+                  <th>Size</th>
+                  <th>Quantity</th>
+                  <th>Price</th>
+                  <th>Total</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for item, price in prices_data %}
+                <tr>
+                  <td>{{ item.product.name }}</td>
+                  <td>{{ item.product_size }}</td>
+                  <td>
+                    <span class="quantity">{{ item.quantity }}</span>
+                  </td>
+                  <td>{{ item.product.price }} PLN</td>
+                  <td>{{ price }} PLN</td>
+                  <td>
+                    {% include 'ShoppingCart/includes/modal.html' with slug=item.product.slug %}
+                    <button type="button" class="btn btn-primary btn-sm " data-bs-toggle="modal" data-bs-target="#editQuantityModal{{ item.product.slug}}{{item.product_size}}">Edit Quantity</button>
+                    <button class="btn btn-danger btn-sm remove">Remove</button>
+                  </td>
+                {% endfor %}
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-6">
+            <button class="btn btn-secondary">Continue Shopping</button>
+          </div>
+          <div class="col-6 text-right">
+            <p>Total: {{ total_cart_price }} PLN</p>
+            <button class="btn btn-primary">Checkout</button>
+          </div>
+        </div>
+      </div>
 {% endblock %}
 
 {% block script %}
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4" crossorigin="anonymous"></script>
+<script src={% static 'js/reload.js' %}></script>
 {% endblock %}
