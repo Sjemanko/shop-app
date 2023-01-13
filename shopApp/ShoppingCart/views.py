@@ -49,8 +49,8 @@ def add_product_to_cart(request, slug):
             return HttpResponseRedirect(f"/products")
 
 def calculate_discount(request):
-    if request.method == "POST":
-        used_code = False
+    used_code = False
+    if request.method == "POST" and request.POST['discount_code'] != "":
         profile = Profile.objects.get(user=request.user)
         shopping_cart = ShoppingCart.objects.get(user_profile=profile)
         items_in_cart = shopping_cart.productincart_set.all().order_by('id')
@@ -60,8 +60,11 @@ def calculate_discount(request):
             used_code = True
         discount_value = round((float(calculate_total_price(request, items_in_cart)) * float(discount.discount_percent)) / 100, 2)
         total_value = round(float(calculate_total_price(request, items_in_cart)) - float(discount_value), 2)
-        
-    return HttpResponseRedirect(f"/cart?used_code=True&total={total_value}")
+        messages.success(request, f"Your discount code has been applied.", extra_tags="success")
+        return HttpResponseRedirect(f"/cart?used_code=True&total={total_value}")
+    else:
+        messages.error(request, f"Your discount code is not valid.", extra_tags="error")
+        return HttpResponseRedirect(f'/cart')
 
 def remove_product_from_cart(request, id):
     product = ProductInCart.objects.get(id=id)

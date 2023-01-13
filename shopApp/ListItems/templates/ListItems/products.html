@@ -40,11 +40,11 @@
 <div class="container mt-5">
   <div class="row">
     <div class="col-md-2 me-5">
-      <h3>Filtry</h3>
+      <h3>Filters</h3>
       <form id="filterForm" method="POST" action="{{ request.path }}">
         {% csrf_token %}
         <div class="form-group">
-          <label for="category">Kategoria</label>
+          <label for="category">Category</label>
           <select class="form-control" id="category" name="cloth_category">
             <option value="none" selected disabled hidden>Select a category:</option>
             {% for category in product_categories %}
@@ -53,26 +53,26 @@
           </select>
         </div>
         <div class="form-group">
-          <label>Płeć</label><br>
+          <label>Gender</label><br>
           <div class="form-check form-check-inline">
             <input class="form-check-input" type="radio" name="radio" id="gender-male" value="M">
-            <label class="form-check-label" for="gender-male">Mężczyzna</label>
+            <label class="form-check-label" for="gender-male">Man</label>
           </div>
           <div class="form-check form-check-inline">
             <input class="form-check-input" type="radio" name="radio" id="gender-female" value="FE">
-            <label class="form-check-label" for="gender-female">Kobieta</label>
+            <label class="form-check-label" for="gender-female">Woman</label>
           </div>
         </div>
-        <button class="btn btn-outline-secondary mt-2" type="submit" name="filter_button">filtruj</button>
+        <button class="btn btn-outline-secondary mt-2" type="submit" name="filter_button">Find</button>
       </form>
     </div>
     <div class="col-md-9">
       <div class="form-inline my-2 my-lg-0 mt-5">
-        <h2 class="">Znajdź swój wymarzony produkt!</h2>
+        <h2 class="">Find your dream product!</h2>
         <form id="searchbarForm" method=POST action="{{ request.path }}">
           {% csrf_token %}
-          <input class="form-control mr-sm-2 mb-2" type="search" placeholder="Szukaj produktu" aria-label="Search" name="name">
-          <button class="btn btn-outline-secondary my-2 my-sm-0" name="search_button" type="submit">Szukaj</button>
+          <input class="form-control mr-sm-2 mb-2" type="search" placeholder="Search for product" aria-label="Search" name="name">
+          <button class="btn btn-outline-secondary my-2 my-sm-0" name="search_button" type="submit">Search</button>
         </form>
       </div>
       <div class="card-deck mt-3">
@@ -94,7 +94,7 @@
                 {% if item.product_quantity != 0 %}
                 <div class="row">
                   <div class="col-md-6">
-                    <p class="card-text">Dostępne rozmiary:
+                    <p class="card-text">Available sizes:
                       <select class="form-control my-1" name="choosen_size">
                         <option value="none" selected disabled hidden>Select available size:</option>
                       {% for size in item.product_size %}
@@ -104,29 +104,29 @@
                     </p> 
                   </div>
                 </div>
-                  <p class="card-text"><b>Cena: {{ item.price }} zł</b></p>
+                  <p class="card-text"><b>Price: {{ item.price }} PLN</b></p>
                   {% if item.gender == 'M' %}
                     <p class="card-text">For: Male</p>
                   {% else %}
                     <p class="card-text">For: Female</p>
                   {% endif %}
-                  <p class="card-text"><small class="text-muted">Pozostało {{ item.product_quantity }} sztuk.</small></p>
+                  <p class="card-text"><small class="text-muted">{{ item.product_quantity }} units remaining.</small></p>
                   <p class="card-text"><small class="text-muted">Last update - {{ item.updated_at }}</small></p>
                   <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-                  <a href="{{ item.name|slugify }}" class="btn btn-primary">Sprawdź szczegóły</a>
+                  <a href="{{ item.name|slugify }}" class="btn btn-primary">Check Details</a>
                   <button name="add_product" value="{{ item.name|slugify }}" class="btn btn-primary">Add to shopping cart</button>
                 </form>
                 {% else %}
-                  <p class="card-text"><b>Cena: {{ item.price }} zł</b></p>
+                  <p class="card-text"><b>Price: {{ item.price }} PLN</b></p>
                   {% if item.gender == 'M' %}
                     <p class="card-text">For: Male</p>
                   {% else %} 
                     <p class="card-text">For: Female</p>
                   {% endif %}
-                  <p class="card-text"><small class="text-muted">Brak towaru na magazynie.</small></p>
+                  <p class="card-text"><small class="text-muted">Out of stock.</small></p>
                   <p class="card-text"><small class="text-muted">Last update - {{ item.updated_at }}</small></p>
                   <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-                  <a href="{{ item.name|slugify }}" class="btn btn-primary">Sprawdź szczegóły</a>
+                  <a href="{{ item.name|slugify }}" class="btn btn-primary">Check Details</a>
                   <button name="add_product" value="{{ item.name|slugify }}" class="btn btn-primary disabled">Add to shopping cart</button>
                 </form>
                 {% endif %}
