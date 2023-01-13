@@ -64,9 +64,10 @@
                   <td>{{ item.product.price }} PLN</td>
                   <td>{{ price }} PLN</td>
                   <td>
-                    {% include 'ShoppingCart/includes/modal.html' with slug=item.product.slug %}
+                    {% include 'ShoppingCart/includes/quantity_modal.html' with slug=item.product.slug %}
                     <button type="button" class="btn btn-primary btn-sm " data-bs-toggle="modal" data-bs-target="#editQuantityModal{{ item.product.slug}}{{item.product_size}}">Edit Quantity</button>
-                    <button class="btn btn-danger btn-sm remove">Remove</button>
+                    {% include 'ShoppingCart/includes/remove_modal.html' with slug=item.product.slug %}
+                    <button type="button" class="btn btn-danger btn-sm " data-bs-toggle="modal" data-bs-target="#removeProductModal{{ item.product.slug}}{{item.product_size}}">Remove Product</button>
                   </td>
                 {% endfor %}
                 </tr>
@@ -76,11 +77,26 @@
         </div>
         <div class="row">
           <div class="col-6">
-            <button class="btn btn-secondary">Continue Shopping</button>
+            <button class="btn btn-secondary"><a href="{% url 'products_list'%}" style="text-decoration: none; color: white;">Continue Shopping</a></button>
           </div>
           <div class="col-6 text-right">
+            <form action="discount/", method="POST">
+              {% csrf_token %}
+                <div class="form-group">
+                    <label for="discountCode">Discount Code:</label>
+                    <input type="text" name="discount_code"
+                    class="form-control" id="discountCode">
+                    <button type="submit" class="btn btn-primary btn-sm">Apply</button>
+                </div>
+            </form>
+          <div class="col-10 text-right mt-2">
+            {% if not request.GET.used_code %}
             <p>Total: {{ total_cart_price }} PLN</p>
-            <button class="btn btn-primary">Checkout</button>
+            <button class="btn btn-primary mt-2">Checkout</button>
+            {% else %}
+            <p style="color: green">Total after discount: {{ total_cart_price }} PLN</p>
+            <button class="btn btn-primary mt-2">Checkout</button>
+            {% endif %}
           </div>
         </div>
       </div>
@@ -88,5 +104,5 @@
 
 {% block script %}
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4" crossorigin="anonymous"></script>
-<script src={% static 'js/reload.js' %}></script>
+{% comment %} <script src={% static 'js/rememberCode.js' %}></script> {% endcomment %}
 {% endblock %}
