@@ -1,0 +1,28 @@
+<!-- Modal -->
+
+<div class="modal fade" id="editQuantityModal{{slug}}{{item.product_size}}" tabindex="-1" role="dialog" aria-labelledby="editQuantityModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="editQuantityModalLabel">Edit Quantity</h5>
+          <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <form action="" method="POST">
+          <div class="modal-body">
+              {% csrf_token %}
+              <div class="form-group">
+                {{item.product.name}} {{item.id}}
+                <label for="newQuantity" class="col-form-label">New Quantity:</label>
+                <input type="number" name="quantity" class="form-control" id="newQuantity" min="1">
+              </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            <button type="submit" name="item_id" value="{{ item.id }}" class="btn btn-primary" id="saveQuantity">Save changes</button>
+        </form>
+        </div>
+      </div>
+    </div>
+  </div>

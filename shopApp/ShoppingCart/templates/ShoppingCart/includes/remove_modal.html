@@ -1,0 +1,27 @@
+<!-- Modal -->
+
+<div class="modal fade" id="removeProductModal{{slug}}{{item.product_size}}" tabindex="-1" role="dialog" aria-labelledby="removeProductModal" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="removeProductModal">Remove Product</h5>
+          <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <form action="{% url 'remove_from_cart' id=item.id %}" method="POST">
+          <div class="modal-body">
+              {% csrf_token %}
+              <div class="form-group">
+                {{item.product.name}} {{item.id}}
+                <p class="center">Do you want to remove this product?</p>
+              </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-primary" data-bs-dismiss="modal">No</button>
+            <button type="submit" name="item_id" value="{{ item.id }}" class="btn btn-danger" id="saveQuantity">Yes</button>
+        </form>
+        </div>
+      </div>
+    </div>
+  </div>

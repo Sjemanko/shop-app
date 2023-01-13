@@ -4,8 +4,6 @@ from .models import Recommendation
 from django.contrib.auth.models import User
 # Create opinion form
 
-
-
 class RecommendationForm(ModelForm):
     title = forms.CharField(widget=forms.TextInput(attrs={"class": "form-control"}))
     content = forms.CharField(widget=forms.Textarea(attrs={"rows": 5, "class": "form-control"}))
