@@ -60,13 +60,6 @@
                 </tr>
               </tbody>
             </table>
-            <div class="col-10 text-right mt-2">
-              {% if not request.GET.used_code %}
-              <p>Total: {{ total_price }} PLN</p>
-              {% else %}
-              <p style="color: green">Total after discount: {{ total_price }} PLN</p>
-              {% endif %}
-            </div>
           </div>
         </div>
       </div>
@@ -120,10 +113,12 @@
             </div>
           </div>
         </div>
-        <div class="row">
-          <div class="col-md-12">
-            <h5 class="text-center mb-3">Wybierz metodę dostawy</h5>
-            <div class="form-check">
+        <form action="show-order-details/" method="POST">
+          {% csrf_token %}
+          <div class="row">
+            <div class="col-md-12">
+              <h5 class="text-center mb-3">Wybierz metodę dostawy</h5>
+              <div class="form-check">
                 <input class="form-check-input" type="radio" name="shipping-method" id="standard-shipping" value="standard">
                 <label class="form-check-label" for="standard-shipping">Standardowa dostawa (7-10 dni)</label>
               </div>
@@ -131,9 +126,26 @@
                 <input class="form-check-input" type="radio" name="shipping-method" id="express-shipping" value="express">
                 <label class="form-check-label" for="express-shipping">Szybka dostawa (3-5 dni)</label>
               </div>
-                <button class="btn btn-primary mt-3" type="submit">Zamów</button>
+              <div class="col-10 text-right mt-2">
+              {% if not request.GET.used_code %}
+              <div class="d-inline-block">
+                <label for="total_with_discount"><b>Total without discount:</b></label>
+                <input id="total_with_discount" class="form-control form-control-plaintext" name="total_price" value="{{total_price}} PLN" readonly></input>
               </div>
+              {% else %}
+              <div class="d-inline-block">
+                <label for="total_with_discount">
+                  <b>Total after discount:</b>
+                </label>
+                <input id="total_with_discount" class="form-control form-control-plaintext" style="color: green" name="total_price" value="{{total_price}} PLN" readonly></input>
+              </div>
+              {% endif %}
             </div>
+              <button class="btn btn-primary mt-3" type="submit">Zamów</button>
+            </div>
+          </div>
+        </form> 
+      </div>
 {% endblock %}
 
 {% block script %}

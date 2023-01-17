@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
 from ListItems.models import Product
-from .models import ShoppingCart, ProductInCart, DiscountCode
+from .models import ShoppingCart, ProductInCart, DiscountCode, OrderDetail
 from login.models import Profile
 from django.contrib import messages
 from django.http import HttpResponseRedirect, HttpResponse
@@ -25,9 +25,8 @@ def cart_view(request):
     else:
         if request.GET.get('used_code', ''):
             total_price = request.GET.get('total')
-            return render(request, 'ShoppingCart/cart.html', {"items_in_cart": items_in_cart, "total_cart_price": total_price, "total_product_prices": total_product_prices, "prices_data": zip(items_in_cart, total_product_prices)})
-        else:
-            return render(request, 'ShoppingCart/cart.html', {"items_in_cart": items_in_cart, "total_cart_price": total_price, "total_product_prices": total_product_prices, "prices_data": zip(items_in_cart, total_product_prices)})
+        return render(request, 'ShoppingCart/cart.html', {"items_in_cart": items_in_cart, "total_cart_price": total_price, "total_product_prices": total_product_prices, "prices_data": zip(items_in_cart, total_product_prices)})
+           
         
 def add_product_to_cart(request, slug):
     profile = Profile.objects.get(user=request.user)
@@ -117,3 +116,22 @@ def update_details_cart_view(request):
     else:
         messages.error(request, f"Form is not valid. Check form and correct fields.")
     return render(request, 'ShoppingCart/confirm_order.html', {"form": form, "submitted": submitted})
+
+
+def show_order_details(request):
+    shopping_cart = ShoppingCart.objects.get(user_profile__user=request.user)
+    # order_details = OrderDetail(shopping_cart=shopping_cart).save()
+    
+    profile = Profile.objects.get(user=request.user)
+    order_details = OrderDetail.objects.get(shopping_cart__user_profile=profile).shopping_cart.user_profile.user.id
+    print(order_details)
+    
+    shopping_cart = ShoppingCart.objects.get(user_profile=profile).productincart_set.all().order_by('id')
+
+    if request.method == "POST":
+        shipping_method = request.POST['shipping-method']
+        total_price = request.POST['total_price']
+        
+        
+        
+        return HttpResponseRedirect(f'/send')
