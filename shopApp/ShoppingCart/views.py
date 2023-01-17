@@ -4,6 +4,8 @@ from .models import ShoppingCart, ProductInCart, DiscountCode
 from login.models import Profile
 from django.contrib import messages
 from django.http import HttpResponseRedirect, HttpResponse
+from login.forms import NewUserForm, UserDetailsForm
+from login.views import save_data_details
 
 # Create your views here.
 def cart_view(request):
@@ -27,7 +29,6 @@ def cart_view(request):
         else:
             return render(request, 'ShoppingCart/cart.html', {"items_in_cart": items_in_cart, "total_cart_price": total_price, "total_product_prices": total_product_prices, "prices_data": zip(items_in_cart, total_product_prices)})
         
-
 def add_product_to_cart(request, slug):
     profile = Profile.objects.get(user=request.user)
     if_product_in_cart = False
@@ -66,6 +67,26 @@ def calculate_discount(request):
         messages.error(request, f"Your discount code is not valid.", extra_tags="error")
         return HttpResponseRedirect(f'/cart')
 
+def submit_order(request):
+    profile = Profile.objects.get(user=request.user)
+    shopping_cart = ShoppingCart.objects.get(user_profile=profile)
+    items_in_cart = shopping_cart.productincart_set.all().order_by('id')
+    total_product_prices = calculate_total_price_for_product(request, items_in_cart)
+    total_price = calculate_total_price(request, items_in_cart)
+    submitted = False
+    if request.method == "POST":
+        save_data_details(request, f'/cart/submit-order')
+    else:
+        form = UserDetailsForm
+        if request.GET.get('used_code', ''):
+            total_price = request.GET.get('total')
+        if Profile.objects.filter(user=request.user.id).exists():
+            profile_details = Profile.objects.get(user=request.user.id)
+            submitted = True
+            form = UserDetailsForm(request.POST or None, instance=profile_details)
+            return render(request, 'ShoppingCart/confirm_order.html', {"form": form, "submitted": submitted, "total_price": total_price, "profile_details": profile_details,"total_product_prices": total_product_prices, 'items_in_cart': items_in_cart, "prices_data": zip(items_in_cart, total_product_prices)})
+    return render(request, 'ShoppingCart/confirm_order.html', {"form": form, 'items_in_cart': items_in_cart, "total_price": total_price, "total_product_prices": total_product_prices, "prices_data": zip(items_in_cart, total_product_prices)})
+
 def remove_product_from_cart(request, id):
     product = ProductInCart.objects.get(id=id)
     product.delete()
@@ -85,4 +106,14 @@ def calculate_total_price_for_product(request, items_in_cart):
 
 def check_if_product_in_cart(request, slug, product_size):
     return ProductInCart.objects.filter(product__slug=slug, product_size=product_size)
-    
+
+def update_details_cart_view(request):
+    profile_details = Profile.objects.get(user=request.user.id)
+    form = UserDetailsForm(request.POST or None, instance=profile_details)
+    if form.is_valid():
+        form.save()
+        messages.success(request, f"Your data has been updated")
+        return HttpResponseRedirect(f'/cart/submit-order')
+    else:
+        messages.error(request, f"Form is not valid. Check form and correct fields.")
+    return render(request, 'ShoppingCart/confirm_order.html', {"form": form, "submitted": submitted})

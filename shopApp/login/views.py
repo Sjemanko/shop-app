@@ -46,22 +46,7 @@ def logout_page(request):
 def profile_page(request, id):
     submitted = False
     if request.method == "POST":
-        form = UserDetailsForm(request.POST)
-        user = request.user
-        first_name = request.POST['first_name']
-        last_name = request.POST['last_name']
-        address = request.POST['address']
-        city = request.POST['city']
-        state = request.POST['state']
-        zip_code = request.POST['zip_code']
-        country = request.POST['country']
-        user_details = Profile(user=user, first_name=first_name, last_name=last_name, address=address, city=city, state=state, zip_code=zip_code, country=country)
-        if form.is_valid():
-            user_details.save()
-            messages.success(request, f"Your data has been saved")
-            return HttpResponseRedirect(f'/account/profile/{request.user.id}')
-        else:
-            messages.error(request, f"Form is not valid. Check form and correct fields.")
+        save_data_details(request, id, f'/account/profile/{request.user.id}')
     else:
         form = UserDetailsForm
         if Profile.objects.filter(user=id).exists():
@@ -72,12 +57,32 @@ def profile_page(request, id):
     return render(request, "Login/profile_page.html", {"form": form })
 
 def update_details(request, id):
-    profile_details = Profile.objects.get(user=id)
+    profile_details = Profile.objects.get(user=request.user.id)
     form = UserDetailsForm(request.POST or None, instance=profile_details)
     if form.is_valid():
         form.save()
         messages.success(request, f"Your data has been updated")
-        return HttpResponseRedirect(f'/account/profile/{request.user.id}/')
+        return HttpResponseRedirect(f'/account/profile/{request.user.id}')
     else:
         messages.error(request, f"Form is not valid. Check form and correct fields.")
     return render(request, 'Login/profile_page.html', {"form": form, "submitted": submitted})
+
+def save_data_details(request, redirected_path):
+    form = UserDetailsForm(request.POST)
+    user = request.user
+    first_name = request.POST['first_name']
+    last_name = request.POST['last_name']
+    address = request.POST['address']
+    city = request.POST['city']
+    state = request.POST['state']
+    zip_code = request.POST['zip_code']
+    country = request.POST['country']
+    user_details = Profile(user=user, first_name=first_name, last_name=last_name, address=address, city=city, state=state, zip_code=zip_code, country=country)
+    if form.is_valid():
+        user_details.save()
+        messages.success(request, f"Your data has been saved")
+        return HttpResponseRedirect(f'{redirected_path}')
+    else:
+        messages.error(request, f"Form is not valid. Check form and correct fields.")
+    
+    

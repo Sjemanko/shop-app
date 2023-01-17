@@ -1,0 +1,49 @@
+<div class="container mt-5">
+    <h1>Customer Address</h1>
+    <hr>
+    <p>First name: {{ profile_details.first_name }} </p>
+    <p>Last name: {{ profile_details.last_name }} </p>
+    <p>Address: {{ profile_details.address }}</p>
+    <p>City: {{ profile_details.city }}</p>
+    <p>State: {{ profile_details.state }}</p>
+    <p>Zip: {{ profile_details.zip_code }}</p>
+    <p>Country: {{ profile_details.country }}</p>
+  </div>
+  <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+    <button type="button" class="btn btn-primary mx-auto my-auto" data-bs-toggle="modal" data-bs-target="#formModal">
+      Go to personal data form
+    </button>
+  </div>
+  
+    <div class="modal fade" id="formModal" tabindex="-1" role="dialog" aria-labelledby="formModalLabel" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="formModalLabel">Complete your personal information</h5>
+            <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            {% if not submitted %}
+            <form action="" method='POST'>
+              {% csrf_token %}
+              <div class=""
+                {{ form.as_p }}
+                <center>
+                  <input type="submit" value="submit" class="btn btn-dark">
+            {% else %}
+            <form action="update/" method='POST'>
+              {% csrf_token %}
+              <div class=""
+                {{ form.as_p }}
+                <center>
+                  <input type="submit" value="submit" class="btn btn-dark">
+            {% endif %}
+                </center>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>

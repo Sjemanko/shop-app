@@ -34,9 +34,9 @@
 
 {% block content %}
 <body>
-    <div class="container">
+    <div class="container mt-5">
         <div class="row">
-          <div class="col-12">
+          <div class="col-12 ">
             <h1>Shopping Cart</h1>
           </div>
         </div>
@@ -92,10 +92,10 @@
           <div class="col-10 text-right mt-2">
             {% if not request.GET.used_code %}
             <p>Total: {{ total_cart_price }} PLN</p>
-            <button class="btn btn-primary mt-2">Checkout</button>
+            <button class="btn btn-primary mt-2"><a href="submit-order/" style="text-decoration: none; color: white;">Checkout</a></button>
             {% else %}
             <p style="color: green">Total after discount: {{ total_cart_price }} PLN</p>
-            <button class="btn btn-primary mt-2">Checkout</button>
+            <button class="btn btn-primary mt-2"><a href="submit-order/?used_code=True&total={{total_cart_price}}" style="text-decoration: none; color: white;">Checkout</a></button>
             {% endif %}
           </div>
         </div>
