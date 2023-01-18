@@ -6,6 +6,12 @@ from django.contrib import messages
 from django.http import HttpResponseRedirect, HttpResponse
 from login.forms import NewUserForm, UserDetailsForm
 from login.views import save_data_details
+from django.core.mail import send_mail
+from django.core.mail import EmailMessage
+from django.template import Context
+from django.template.loader import get_template
+from django.core.mail import EmailMultiAlternatives
+from django.template.loader import render_to_string
 
 # Create your views here.
 def cart_view(request):
@@ -67,6 +73,7 @@ def calculate_discount(request):
         return HttpResponseRedirect(f'/cart')
 
 def submit_order(request):
+    used_code = False
     profile = Profile.objects.get(user=request.user)
     shopping_cart = ShoppingCart.objects.get(user_profile=profile)
     items_in_cart = shopping_cart.productincart_set.all().order_by('id')
@@ -120,18 +127,35 @@ def update_details_cart_view(request):
 
 def show_order_details(request):
     shopping_cart = ShoppingCart.objects.get(user_profile__user=request.user)
-    # order_details = OrderDetail(shopping_cart=shopping_cart).save()
-    
     profile = Profile.objects.get(user=request.user)
-    order_details = OrderDetail.objects.get(shopping_cart__user_profile=profile).shopping_cart.user_profile.user.id
-    print(order_details)
+    shopping_cart_items = ShoppingCart.objects.get(user_profile=profile).productincart_set.all().order_by('id')
+    total_product_prices = calculate_total_price_for_product(request, shopping_cart_items)
     
-    shopping_cart = ShoppingCart.objects.get(user_profile=profile).productincart_set.all().order_by('id')
-
-    if request.method == "POST":
+    if request.method == "POST" and 'shipping-method' in request.POST:
         shipping_method = request.POST['shipping-method']
         total_price = request.POST['total_price']
         
+        msg_plain = render_to_string('ShoppingCart/email_confirmation_text.txt', {"shopping_cart": shopping_cart, "profile": profile, "shopping_cart_items": shopping_cart_items, "shipping_method": shipping_method, "total_price": total_price, "total_product_prices": total_product_prices, "prices_data": zip(shopping_cart_items, total_product_prices)})
+        msg_html = render_to_string('ShoppingCart/email_confirmation_text.html', {"shopping_cart": shopping_cart, "profile": profile, "shopping_cart_items": shopping_cart_items, "shipping_method": shipping_method, "total_price": total_price, "total_product_prices": total_product_prices, "prices_data": zip(shopping_cart_items, total_product_prices)})
+
+        # Dane email wpisywane na sztywno 
+        send_mail(
+            'Ordered Items',
+            msg_plain,
+            'cypresstests@spoko.pl',
+            ['piyexik119@fom8.com'],
+            html_message=msg_html,
+        )
+        messages.success(request, f"The purchase has been confirmed. Check your mailbox.", extra_tags="success")
         
         
-        return HttpResponseRedirect(f'/send')
+        
+    else:
+        messages.error(request, f"Complete the means of transportation.", extra_tags="error")
+        return HttpResponseRedirect(f'/cart/submit-order')
+    return render(request, 'sender/email_confirmation.html', {"shopping_cart": shopping_cart, "profile": profile, "shopping_cart_items": shopping_cart_items, "shipping_method": shipping_method, "total_price": total_price})
+
+
+def send_email_notification(request):
+    
+    return render(request, 'sender/email_confirmation.html')
