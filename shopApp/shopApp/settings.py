@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'login',
     'crispy_forms',
     'ShoppingCart',
+    'sender',
 ]
 
 MIDDLEWARE = [
@@ -162,7 +163,8 @@ STATICFILES_DIRS = (
     BASE_DIR / 'home', 
     BASE_DIR / 'ListItems',
     BASE_DIR / 'login',
-    BASE_DIR / 'ShoppingCart',)
+    BASE_DIR / 'ShoppingCart',
+    BASE_DIR / 'sender',)
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
@@ -176,3 +178,11 @@ REST_FRAMEWORK = {
         'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly'
     ]
 }
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = os.environ.get('EMAIL_HOST')
+EMAIL_PORT = os.environ.get('EMAIL_PORT')
+EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER')
+# EMAIL_USE_TLS = os.environ.get('EMAIL_USE_TLS')
+EMAIL_USE_SSL = os.environ.get('EMAIL_USE_SSL')
+EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD')

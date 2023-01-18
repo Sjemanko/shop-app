@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+    <body>
+        <br>
+
+        <h2>Thank you for your order {{ profile.first_name }}</h2>
+
+        <h3>Shipping Details:</h3>
+
+        {{ profile.first_name }} </br>
+        {{ shipping_method }} <br/>
+        {{ profile.city }} <br/>
+        {{ profile.zip_code}}
+
+        <h3>
+            Contact Details:
+        </h3>
+        Email: {{ profile.user.email }} <br/>
+
+        <h2>Order Details:</h2>
+
+        <table>
+
+            <thead>
+                <tr>
+                    <th>Product</th>
+                    <th>Quantity</th>
+                    <th>Price</th>
+                    <th>Total Price</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item, price in prices_data %}
+                    <tr>
+                        <td>{{ item.product.name }}</td>
+                        <td>{{ item.quantity }}</td>
+                        <td>{{ item.product.price }}</td>
+                        <td>{{ price }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+            {% if used_code %}
+                <p>Total price with discount: {{ total_price }}</p>
+            {% else %}
+                <p>Total price: {{ total_price }}</p>
+            {% endif %}
+        </table>
+    </body>
+</html>
