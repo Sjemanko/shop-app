@@ -12,8 +12,10 @@ from django.template import Context
 from django.template.loader import get_template
 from django.core.mail import EmailMultiAlternatives
 from django.template.loader import render_to_string
+from django.contrib.auth.decorators import login_required
 
 # Create your views here.
+@login_required(login_url="/account/login")
 def cart_view(request):
     profile = Profile.objects.get(user=request.user)
     shopping_cart = ShoppingCart.objects.get(user_profile=profile)
@@ -33,7 +35,7 @@ def cart_view(request):
             total_price = request.GET.get('total')
         return render(request, 'ShoppingCart/cart.html', {"items_in_cart": items_in_cart, "total_cart_price": total_price, "total_product_prices": total_product_prices, "prices_data": zip(items_in_cart, total_product_prices)})
            
-        
+@login_required(login_url="/account/login")
 def add_product_to_cart(request, slug):
     profile = Profile.objects.get(user=request.user)
     if_product_in_cart = False
@@ -41,7 +43,7 @@ def add_product_to_cart(request, slug):
         product = Product.objects.get(slug=slug)
         if 'choosen_size' in request.POST:
             product_size = request.POST['choosen_size']
-            if_product_in_cart = check_if_product_in_cart(request, slug, product_size)
+            if_product_in_cart = check_if_product_in_cart(request, slug, product_size, profile)
             if if_product_in_cart:
                 messages.error(request, f"{product.name} is already in shopping cart", extra_tags='error')
                 return HttpResponseRedirect(f"/products")
@@ -54,6 +56,7 @@ def add_product_to_cart(request, slug):
             messages.error(request, f"Choose size of the cloth, then add to shopping cart", extra_tags='error')
             return HttpResponseRedirect(f"/products")
 
+@login_required(login_url="/account/login")
 def calculate_discount(request):
     used_code = False
     if request.method == "POST" and request.POST['discount_code'] != "":
@@ -72,6 +75,7 @@ def calculate_discount(request):
         messages.error(request, f"Your discount code is not valid.", extra_tags="error")
         return HttpResponseRedirect(f'/cart')
 
+@login_required(login_url="/account/login")
 def submit_order(request):
     used_code = False
     profile = Profile.objects.get(user=request.user)
@@ -93,26 +97,31 @@ def submit_order(request):
             return render(request, 'ShoppingCart/confirm_order.html', {"form": form, "submitted": submitted, "total_price": total_price, "profile_details": profile_details,"total_product_prices": total_product_prices, 'items_in_cart': items_in_cart, "prices_data": zip(items_in_cart, total_product_prices)})
     return render(request, 'ShoppingCart/confirm_order.html', {"form": form, 'items_in_cart': items_in_cart, "total_price": total_price, "total_product_prices": total_product_prices, "prices_data": zip(items_in_cart, total_product_prices)})
 
+@login_required(login_url="/account/login")
 def remove_product_from_cart(request, id):
     product = ProductInCart.objects.get(id=id)
     product.delete()
     return  HttpResponseRedirect(f"/cart")
 
+@login_required(login_url="/account/login")
 def calculate_total_price(request, items_in_cart):
     total = 0
     for item in items_in_cart:
         total += item.quantity * item.product.price
     return total
 
+@login_required(login_url="/account/login")
 def calculate_total_price_for_product(request, items_in_cart):
     prices = []
     for item in items_in_cart:
         prices.append(item.quantity * item.product.price)
     return prices
 
-def check_if_product_in_cart(request, slug, product_size):
-    return ProductInCart.objects.filter(product__slug=slug, product_size=product_size)
+@login_required(login_url="/account/login")
+def check_if_product_in_cart(request, slug, product_size, profile):
+    return ProductInCart.objects.filter(product__slug=slug, product_size=product_size, shopping_cart_id__user_profile=profile)
 
+@login_required(login_url="/account/login")
 def update_details_cart_view(request):
     profile_details = Profile.objects.get(user=request.user.id)
     form = UserDetailsForm(request.POST or None, instance=profile_details)
@@ -124,7 +133,7 @@ def update_details_cart_view(request):
         messages.error(request, f"Form is not valid. Check form and correct fields.")
     return render(request, 'ShoppingCart/confirm_order.html', {"form": form, "submitted": submitted})
 
-
+@login_required(login_url="/account/login")
 def show_order_details(request):
     shopping_cart = ShoppingCart.objects.get(user_profile__user=request.user)
     profile = Profile.objects.get(user=request.user)
@@ -147,15 +156,7 @@ def show_order_details(request):
             html_message=msg_html,
         )
         messages.success(request, f"The purchase has been confirmed. Check your mailbox.", extra_tags="success")
-        
-        
-        
     else:
         messages.error(request, f"Complete the means of transportation.", extra_tags="error")
         return HttpResponseRedirect(f'/cart/submit-order')
-    return render(request, 'sender/email_confirmation.html', {"shopping_cart": shopping_cart, "profile": profile, "shopping_cart_items": shopping_cart_items, "shipping_method": shipping_method, "total_price": total_price})
-
-
-def send_email_notification(request):
-    
-    return render(request, 'sender/email_confirmation.html')
+    return render(request, 'ShoppingCart/email_confirmation.html', {"shopping_cart": shopping_cart, "profile": profile, "shopping_cart_items": shopping_cart_items, "shipping_method": shipping_method, "total_price": total_price})

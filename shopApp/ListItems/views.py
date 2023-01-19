@@ -6,6 +6,7 @@ from .forms import RecommendationForm
 from django.http import HttpResponseRedirect
 from django.contrib.auth.models import User
 from django.contrib import messages
+from django.contrib.auth.decorators import login_required
 # Create your views here.
 
 def product_page(request, gender, category):
@@ -52,6 +53,7 @@ def product_details_page(request, slug):
     avg_score = count_average_opinion_value(request, recommendations)
     return render(request, 'ListItems/product_details.html', {"product_details": product, "recommendations": recommendations, "all_recomendations": all_recomendations,  "average_score": avg_score})
 
+@login_required(login_url="/account/login")
 def add_opinion(request, slug):
     submitted = False
     product = Product.objects.get(slug=slug)
