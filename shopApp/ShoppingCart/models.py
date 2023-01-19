@@ -18,8 +18,8 @@ class OrderDetail(models.Model):
 
 
 class ProductInCart(models.Model):
-    shopping_cart_id = models.ForeignKey(ShoppingCart, on_delete=models.CASCADE)
-    product = models.ForeignKey(Product, on_delete=models.CASCADE,null=True, blank=True)
+    shopping_cart_id = models.ForeignKey(ShoppingCart, on_delete=models.CASCADE, null=True)
+    product = models.ForeignKey(Product, on_delete=models.CASCADE, null=True, blank=True)
     quantity = models.PositiveIntegerField(default='1')
     product_size = models.CharField(
         max_length=1,
@@ -29,8 +29,8 @@ class ProductInCart(models.Model):
     def __str__(self):
         return f"{self.id} {self.product} {self.quantity}"
     
-    class Meta:
-        unique_together = ('product', 'product_size')
+    # class Meta:
+        unique_together = ('shopping_cart_id', 'product', 'product_size')
 
 
 class DiscountCode(models.Model):

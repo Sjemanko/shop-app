@@ -41,7 +41,7 @@ def add_product_to_cart(request, slug):
         product = Product.objects.get(slug=slug)
         if 'choosen_size' in request.POST:
             product_size = request.POST['choosen_size']
-            if_product_in_cart = check_if_product_in_cart(request, slug, product_size)
+            if_product_in_cart = check_if_product_in_cart(request, slug, product_size, profile)
             if if_product_in_cart:
                 messages.error(request, f"{product.name} is already in shopping cart", extra_tags='error')
                 return HttpResponseRedirect(f"/products")
@@ -110,8 +110,8 @@ def calculate_total_price_for_product(request, items_in_cart):
         prices.append(item.quantity * item.product.price)
     return prices
 
-def check_if_product_in_cart(request, slug, product_size):
-    return ProductInCart.objects.filter(product__slug=slug, product_size=product_size)
+def check_if_product_in_cart(request, slug, product_size, profile):
+    return ProductInCart.objects.filter(product__slug=slug, product_size=product_size, shopping_cart_id__user_profile=profile)
 
 def update_details_cart_view(request):
     profile_details = Profile.objects.get(user=request.user.id)
@@ -147,9 +147,6 @@ def show_order_details(request):
             html_message=msg_html,
         )
         messages.success(request, f"The purchase has been confirmed. Check your mailbox.", extra_tags="success")
-        
-        
-        
     else:
         messages.error(request, f"Complete the means of transportation.", extra_tags="error")
         return HttpResponseRedirect(f'/cart/submit-order')
