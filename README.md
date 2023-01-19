@@ -5,7 +5,7 @@
 * [Technologies](#technologies)
 
 ## General info
-My first project in web development.
+My first project in web development. Project created to practice programming web applications.
 
 ## Technologies
 
