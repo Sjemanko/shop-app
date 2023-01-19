@@ -29,7 +29,7 @@ class ProductInCart(models.Model):
     def __str__(self):
         return f"{self.id} {self.product} {self.quantity}"
     
-    # class Meta:
+    class Meta:
         unique_together = ('shopping_cart_id', 'product', 'product_size')
 
 

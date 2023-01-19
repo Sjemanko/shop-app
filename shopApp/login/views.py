@@ -6,6 +6,8 @@ from django.contrib.auth.forms import AuthenticationForm #add this
 from django.http import HttpResponseRedirect
 from .models import Profile
 from django.core.exceptions import ObjectDoesNotExist
+from django.contrib.auth.decorators import login_required
+
 # Create your views here.
 
 def register_page(request):
@@ -38,11 +40,13 @@ def login_page(request):
 	form = AuthenticationForm()
 	return render(request=request, template_name='login/login_page.html', context={"login_form":form})
 
+@login_required(login_url="/account/login")
 def logout_page(request):
     logout(request)
     messages.info(request, "You have successfully logged out.")
     return redirect("/home/")
 
+@login_required(login_url="/account/login")
 def profile_page(request, id):
     submitted = False
     if request.method == "POST":
@@ -56,6 +60,7 @@ def profile_page(request, id):
             return render(request, "Login/profile_page.html", {"form": form, "submitted": submitted, "profile_details": profile_details })
     return render(request, "Login/profile_page.html", {"form": form })
 
+@login_required(login_url="/account/login")
 def update_details(request, id):
     profile_details = Profile.objects.get(user=request.user.id)
     form = UserDetailsForm(request.POST or None, instance=profile_details)
@@ -67,6 +72,7 @@ def update_details(request, id):
         messages.error(request, f"Form is not valid. Check form and correct fields.")
     return render(request, 'Login/profile_page.html', {"form": form, "submitted": submitted})
 
+@login_required(login_url="/account/login")
 def save_data_details(request, redirected_path):
     form = UserDetailsForm(request.POST)
     user = request.user
