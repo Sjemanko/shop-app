@@ -49,10 +49,10 @@ def logout_page(request):
 @login_required(login_url="/account/login")
 def profile_page(request, id):
     submitted = False
+    form = UserDetailsForm
     if request.method == "POST":
-        save_data_details(request, id, f'/account/profile/{request.user.id}')
+        save_data_details(request, f'/account/profile/{request.user.id}')
     else:
-        form = UserDetailsForm
         if Profile.objects.filter(user=id).exists():
             profile_details = Profile.objects.get(user=id)
             submitted = True

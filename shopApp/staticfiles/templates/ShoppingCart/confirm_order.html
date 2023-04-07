@@ -1,0 +1,154 @@
+{% extends 'base.html' %}
+{% load static %}
+
+
+{% block style %}
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
+{% endblock %}
+
+{% block title %}
+  Submit order page
+{% endblock %}
+
+{% block navbar %}
+{% include 'includes/navbar.html' %}
+{% endblock %}
+
+{% block messages %}
+{% if messages %}
+{% for message in messages %}
+{% if 'success' in message.tags %}
+<div class="alert alert-success alert-alert-dismissable fade show" role="alert">
+  {{ message }}
+  <button type="button" class="btn-close float-end" data-bs-dismiss="alert" aria-label="Close"></button>
+</div>
+{% else %}
+<div class="alert alert-warning alert-alert-dismissable fade show" role="alert">
+  {{ message }}
+  <button type="button" class="btn-close float-end" data-bs-dismiss="alert" aria-label="Close"></button>
+</div>
+{% endif %}
+{% endfor %}
+{% endif %}
+{% endblock %}
+
+{% block content %}
+
+     <div class="container my-5">
+        <div class="row">
+          <div class="col-6">
+            {% include 'login/includes/personal_data_form.html' %}
+          </div>
+          <div class="col-6 mt-5">
+            <table class="table">
+              <thead>
+                <tr>
+                  <th>Product</th>
+                  <th>Size</th>
+                  <th>Quantity</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for item in items_in_cart %}
+                <tr>
+                  <td>{{ item.product.name }}</td>
+                  <td>{{ item.product_size }}</td>
+                  <td>
+                    <span class="quantity">{{ item.quantity }}</span>
+                  </td>
+                {% endfor %}
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+      <div class="container">
+        <h2 class="text-center mb-5">Zapłać za produkt i wybierz metodę transportu</h2>
+        <div class="row">
+          <div class="col-md-6">
+            <div class="card mb-3">
+              <div class="card-body">
+                <h5 class="card-title">Metoda płatności</h5>
+                <form>
+                  <div class="form-group">
+                    <label for="card-number">Numer karty</label>
+                    <input type="text" class="form-control" id="card-number">
+                  </div>
+                  <div class="form-group">
+                    <label for="card-name">Imię i nazwisko na karcie</label>
+                    <input type="text" class="form-control" id="card-name">
+                  </div>
+                  <div class="form-group">
+                    <label for="card-expiry">Data ważności</label>
+                    <input type="text" class="form-control" id="card-expiry">
+                  </div>
+                  <div class="form-group">
+                    <label for="card-cvc">CVC</label>
+                    <input type="text" class="form-control" id="card-cvc">
+                  </div>
+                  <button type="submit" class="btn btn-primary">Zapłać</button>
+                </form>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="card mb-3">
+              <div class="card-body">
+                <h5 class="card-title">PayPal</h5>
+                <p class="card-text">Kliknij przycisk poniżej, aby zapłacić przez PayPal</p>
+                <a href="#" class="btn btn-primary">Zapłać</a>
+              </div>
+            </div>
+            <div class="card mb-3">
+              <div class="card-body">
+                <h5 class="card-title">Przelew bankowy</h5>
+                <p class="card-text">Wyślij przelew na poniższy numer konta</p>
+                <ul>
+                  <li>Numer konta: 1234567890</li>
+                  <li>Nazwa odbiorcy: ABC</li>
+                  <li>Bank: XYZ</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+        <form action="show-order-details/" method="POST">
+          {% csrf_token %}
+          <div class="row">
+            <div class="col-md-12">
+              <h5 class="text-center mb-3">Wybierz metodę dostawy</h5>
+              <div class="form-check">
+                <input class="form-check-input" type="radio" name="shipping-method" id="standard-shipping" value="standard">
+                <label class="form-check-label" for="standard-shipping">Standardowa dostawa (7-10 dni)</label>
+              </div>
+              <div class="form-check">
+                <input class="form-check-input" type="radio" name="shipping-method" id="express-shipping" value="express">
+                <label class="form-check-label" for="express-shipping">Szybka dostawa (3-5 dni)</label>
+              </div>
+              <div class="col-10 text-right mt-2">
+              {% if not request.GET.used_code %}
+              <div class="d-inline-block">
+                <label for="total_with_discount"><b>Total without discount:</b></label>
+                <input id="total_with_discount" class="form-control form-control-plaintext" name="total_price" value="{{total_price}} PLN" readonly></input>
+              </div>
+              {% else %}
+              <div class="d-inline-block">
+                <label for="total_with_discount">
+                  <b>Total after discount:</b>
+                </label>
+                <input id="total_with_discount" class="form-control form-control-plaintext" style="color: green" name="total_price" value="{{total_price}} PLN" readonly></input>
+              </div>
+              {% endif %}
+            </div>
+              <button class="btn btn-primary mt-3" type="submit">Zamów</button>
+            </div>
+          </div>
+        </form> 
+      </div>
+{% endblock %}
+
+{% block script %}
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4" crossorigin="anonymous"></script>
+{% comment %} <script src={% static 'js/rememberCode.js' %}></script> {% endcomment %}
+{% endblock %}

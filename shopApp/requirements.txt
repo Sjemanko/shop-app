@@ -10,3 +10,4 @@ whitenoise
 django-widget-tweaks
 Pillow
 django-crispy-forms
+crispy-bootstrap5
