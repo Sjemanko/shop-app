@@ -22,3 +22,12 @@ Project is mainly created with:
 
 * Bootstrap 5.0
 
+## Docker requirements
+1) Run docker compose up in docker-compose.yaml directory
+2) If there's a problem with finding .sh scripts while docker's setting up containers, try to change "End of line sequence" from CRLF To LF in both files.
+
+
+//TODO
+* postgresql scripts for populating data
+* fix bugs (with creating object after register user "Cart", "Profile")
+* fix associations with models
